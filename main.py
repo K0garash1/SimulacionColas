@@ -1,3 +1,5 @@
+#Brayan Steven Arellano Espinosa - 20191020151
+
 #Tasa de llegada promedio
 l = None
 while (True):
