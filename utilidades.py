@@ -18,7 +18,7 @@ def obtenerDistibucionPoisson(l, n):
 #Test de Kolmogorov–Smirnov
 
 def testNorm(dist, u, s):
-    s, p = stats.kstest(dist, 'norm', args=(u, s))
+    s, p = stats.kstest(dist, stats.norm.rvs(loc=u, scale=s, size=100000))
     print(f">> El valor Z para la pueba es {p}")
     if p < z_score:
         print(f">> Se rechaza la hipoteseis nula (puntaje z menor a {z_score})")
@@ -26,7 +26,7 @@ def testNorm(dist, u, s):
         print(f">> No se puede rechazar la hipotesis nula (puntaje z mayor o igual a {z_score})")
 
 def testPoisson(dist, l):
-    s, p = stats.kstest(dist, stats.poisson.rvs(mu= l, size=10000))
+    s, p = stats.kstest(dist, stats.poisson.rvs(mu= l, size=100000))
     print(f">> El valor Z para la pueba es {p}")
     if p < z_score:
         print(f">> Se rechaza la hipoteseis nula (puntaje z menor a {z_score})")
@@ -34,9 +34,15 @@ def testPoisson(dist, l):
         print(f">> No se puede rechazar la hipotesis nula (puntaje z mayor o igual a {z_score})")
 
 #Grafica histograma de un arreglo de datos
-
-def graficarDistribucion(dist):
+def graficarDistribucion(dist, titulo):
     plt.hist(dist, density=True)
+    plt.title(titulo)
+    plt.show()
+
+#Grafica lista de datos
+def graficarLista(lista, titulo):
+    plt.plot(lista)
+    plt.title(titulo)
     plt.show()
 
 #Acumula los tiempos de una lista
@@ -47,3 +53,10 @@ def acumular(lista):
         acumulado+=lista[i]
         respuesta.append(acumulado)
     return respuesta
+
+#Promedio de una lista
+def promedio(lista):
+    promedio = 0
+    for i in range(0, len(lista)):
+        promedio+=lista[i]
+    return promedio/len(lista)

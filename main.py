@@ -8,7 +8,7 @@ from sistema import *
 #Tasa de llegada promedio
 l = None
 while (True):
-    print("Ingrese el parametro λ")
+    print("Ingrese la tasa de llegada promedio λ (Clientes/Hora)")
     while (True):
         try:
             l = float(input())
@@ -20,7 +20,7 @@ while (True):
 #Tasa de servicio promedio
 u = None
 while (True):
-    print("Ingrese el parametro μ")
+    print("Ingrese la tasa de servicio promedio μ (Clientes/Hora)")
     while (True):
         try:
             u = float(input())
@@ -57,7 +57,9 @@ while (True):
 
 #GENERACION DE DATOS
 distPoisson = obtenerDistibucionPoisson(l, n)
+graficarDistribucion(distPoisson, "Distribucion Poisson generada")
 distNormal = obtenerDistibucionNormal(u, s, n)
+graficarDistribucion(distNormal, "Distribucion Normal generada")
 
 
 #TEST DE DATOS
@@ -68,8 +70,8 @@ if input("Desea realizar un test de Kolmogorov–Smirnov para la distribucion no
 
 
 #SIMULACION
-
 print(f"Iniciando simulacion para {n} clientes")
+
 #Tiempos entre llegada de cliente (en minutos)
 llegada_clientes = list(distPoisson.tolist())
 for i in range(0, len(llegada_clientes)):
@@ -77,7 +79,6 @@ for i in range(0, len(llegada_clientes)):
         llegada_clientes[i]=1
     #(minutos*100)/cliente
     llegada_clientes[i] = int(6000/llegada_clientes[i])
-llegada_clientes = acumular(llegada_clientes)
 
 #Duracion del cliente en servidor (Tiempo de servicio en minutos)
 atencion_clientes = list(distNormal.tolist())
@@ -85,48 +86,22 @@ for i in range(0, len(atencion_clientes)):
     #(minutos*100)/cliente
     atencion_clientes[i] = int(6000/atencion_clientes[i])
 
-#Lista de clientes que salen del sistema
-clientes_atendidos = []
-
-t=0
-s = Servicio()
-
-while len(clientes_atendidos)<n:
-    #Salida del cliente actual
-    if s.actual is not None:
-        if t==s.actual.tiempo_salida:
-            clientes_atendidos.append(s.actual)
-            s.actual = None
-    #Llega un nuevo cliente
-    if len(llegada_clientes)>0:
-        if t == llegada_clientes[0]:
-            cliente = Cliente(llegada_clientes[0], atencion_clientes[0])
-            llegada_clientes.pop(0)
-            atencion_clientes.pop(0)
-            s.cola.append(cliente)
-    #Mueve el primer cliente en cola a servidor
-    if s.hayCola() & (s.actual is None):
-        s.actual = s.cola.pop(0)
-        s.actual.tiempo_salida=t+s.actual.tiempo_servicio
-        s.actual.tiempo_atencion=t
-    t+=1
-
-#Total clientes atendidos
-print(f"Total de clientes atendidos: {len(clientes_atendidos)}")
-
-#Tiempos promedio en sistema y en cola
-ws = 0
-wq = 0
-
-for i in range(0, len(clientes_atendidos)):
-    #Tiempo en sistema = Tiempo de salida - Tiempo de llegada
-    ws+=clientes_atendidos[i].tiempo_salida - clientes_atendidos[i].tiempo_llegada
-    #Tiempo en cola = Tiempo de atencion- tiempo de llegada
-    wq+= clientes_atendidos[i].tiempo_atencion - clientes_atendidos[i].tiempo_llegada
-
-#Suma de tiempos/Total de clientes
-ws/=len(clientes_atendidos)
-wq/=len(clientes_atendidos)
-
-print(f"Tiempo en sistema: {ws/100} minutos")
-print(f"Tiempo en cola: {wq/100} minutos")
+#Simula el servicio
+s = Servicio().Simular(acumular(llegada_clientes), atencion_clientes)
+print(f"Se han simulado {len(s.clientes_atendidos)}")
+print(f"Promedio de clientes en sistema: {promedio(s.clientes_en_sistema)}")
+graficarLista(s.clientes_en_sistema, "Clientes en sistema")
+print(f"Promedio de clientes en cola: {promedio(s.clientes_en_cola)}")
+graficarLista(s.clientes_en_cola, "Clientes en cola")
+tiempos_en_sistema = []
+for cliente in s.clientes_atendidos:
+    tiempo = cliente.tiempo_salida-cliente.tiempo_llegada
+    tiempos_en_sistema.append(tiempo/100)
+print(f"El promedio de tiempo en sistema es: {promedio(tiempos_en_sistema)} minutos")
+graficarLista(tiempos_en_sistema, "Tiempos en sistema")
+tiempos_en_cola = []
+for cliente in s.clientes_atendidos:
+    tiempo = cliente.tiempo_atencion-cliente.tiempo_llegada
+    tiempos_en_cola.append(tiempo/100)
+print(f"El promedio de tiempo en cola es: {promedio(tiempos_en_cola)} minutos")
+graficarLista(tiempos_en_cola, "Tiempos en cola")
