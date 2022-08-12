@@ -1,13 +1,14 @@
 class Servicio:
-  clientes_en_sistema = []
-  clientes_en_cola = []
-  tiempo_transcurrido = 0
-  #Lista de clientes que salen del sistema
-  clientes_atendidos = []
-  #Clientes en cola
-  cola = []
-  #Cliente en servidor
-  actual = None
+  def __init__(self):
+    self.clientes_en_sistema = []
+    self.clientes_en_cola = []
+    self.tiempo_transcurrido = 0
+    #Lista de clientes que salen del sistema
+    self.clientes_atendidos = []
+    #Clientes en cola
+    self.cola = []
+    #Cliente en servidor
+    self.actual = None
 
   def hayCola(self):
       return len(self.cola)>0
@@ -50,15 +51,13 @@ class Servicio:
 
 
 class Cliente:
-  #Tiempo de llegada: instante de tiempo en el que el cliente ingresa al sistema
-  tiempo_llegada = 0
-  #Tiempo de atencion: instante de tiempo en el que el cliente es movido de cola a servidor
-  tiempo_atencion = 0
-  #Tiempo de servicio: unidades de tiempo que el cliente tarda en servidor
-  tiempo_servicio = 0
-  #Tiempo de salida: instante de tienpo en el que el cliente sale del sistema
-  tiempo_salida = 0
   #Nuevo cliente
   def __init__(self, t_ll, t_s):
+    #Tiempo de llegada: instante de tiempo en el que el cliente ingresa al sistema
     self.tiempo_llegada = t_ll
+    #Tiempo de atencion: instante de tiempo en el que el cliente es movido de cola a servidor
+    self.tiempo_atencion = 0
+    #Tiempo de servicio: unidades de tiempo que el cliente tarda en servidor
     self.tiempo_servicio = t_s
+    #Tiempo de salida: instante de tienpo en el que el cliente sale del sistema
+    self.tiempo_salida = 0

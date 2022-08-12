@@ -4,7 +4,7 @@ from sistema import *
 l = 10
 u = 15
 s = 1.2
-n= 1000
+n= 10000
 
 for i in range(20):
     print(f"-------Simulacion {i+1}-------")
@@ -21,12 +21,12 @@ for i in range(20):
             tiempos_llegadas[i]=1
         #(minutos*100)/cliente
         tiempos_llegadas[i] = int(6000/tiempos_llegadas[i])
-
+    
     tiempos_servicio = list(tasa_servicio.tolist())
     for i in range(0, len(tiempos_servicio)):
         #(minutos*100)/cliente
         tiempos_servicio[i] = int(6000/tiempos_servicio[i])
-
+    
     #Simula el servicio
     serv = Servicio().Simular(acumular(tiempos_llegadas), tiempos_servicio)
     print(f"Se han simulado {len(serv.clientes_atendidos)}")
