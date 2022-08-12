@@ -34,8 +34,13 @@ def testPoisson(dist, l):
         print(f">> No se puede rechazar la hipotesis nula (puntaje z mayor o igual a {z_score})")
 
 #Grafica histograma de un arreglo de datos
-def graficarDistribucion(dist, titulo):
+def graficarDistribucion(dist, titulo, u, s):
     plt.hist(dist, density=True)
+    x = np.linspace(0,30, 100)
+    if s == 0:
+        plt.plot(x, stats.poisson.pmf(x, u, s))
+    else:
+        plt.plot(x, stats.norm.pdf(x, u, s))
     plt.title(titulo)
     plt.show()
 

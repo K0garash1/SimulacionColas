@@ -57,9 +57,9 @@ while (True):
 
 #GENERACION DE DATOS
 distPoisson = obtenerDistibucionPoisson(l, n)
-graficarDistribucion(distPoisson, "Distribucion Poisson generada")
+graficarDistribucion(distPoisson, "Distribucion Poisson generada", l, 0)
 distNormal = obtenerDistibucionNormal(u, s, n)
-graficarDistribucion(distNormal, "Distribucion Normal generada")
+graficarDistribucion(distNormal, "Distribucion Normal generada", u, s)
 
 
 #TEST DE DATOS
